@@ -2,7 +2,7 @@
   <div class="s-container">
     <form @submit.prevent="findUser">
       <div class="s-form-group">
-        <label for="validationServer03">Username</label>
+        <label for="validationServer03"><h3>Find github repositories by username</h3></label>
         <input 
           type="text" 
           class="form-control" 

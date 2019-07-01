@@ -16,7 +16,6 @@ export default {
     const { username, repository } = this.$route.params;
     axios.get(`https://raw.githubusercontent.com/${username}/${repository}/master/README.md`)
       .then(resp => {
-        console.log(resp.data);
         this.text = resp.data;
       })
       .catch(err => {
