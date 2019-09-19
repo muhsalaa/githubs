@@ -1,8 +1,8 @@
 <template>
-    <router-link class="s-card" :to="`/${content.owner.login}/${content.name}`">
-      <span class="s-repo-link">
+    <router-link class="flex h-16 bg-gray-400 items-center border-b-2 border-black px-4 hover:bg-white hover:h-20" :to="`/${content.owner.login}/${content.name}`">
+      <p class="font-body font-bold">
         - {{ content.name }}
-      </span>
+      </p>
     </router-link>
 </template>
 
@@ -12,24 +12,5 @@ export default {
 }
 </script>
 
-<style scoped>
-  .s-card {
-    height: 4rem;
-    display: flex;
-    background: #bed1b0;
-    padding: 0 2rem;
-    align-items: center;
-    border-bottom: white 2px solid;
-    cursor: pointer;
-    text-decoration: none;
-  }
-
-  .s-repo-link {
-    font-weight: bold;
-    color: black
-  }
-
-  .s-card:hover span {
-    color: #ebebeb;
-  }
+<style>
 </style>

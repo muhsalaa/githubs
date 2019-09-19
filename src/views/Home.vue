@@ -1,47 +1,55 @@
 <template>
-  <div class="s-container">
+  <div class="flex justify-center py-24 bg-black">
     <form @submit.prevent="findUser">
-      <div class="s-form-group">
-        <label for="validationServer03"><h3>Find github repositories by username</h3></label>
+      <div class="w-full bg-black h-48 p-4">
+        <label for="username">
+          <p class="font-cursive font-bold text-white text-3xl mb-2">
+            Find github repositories by username
+          </p>
+        </label>
         <input 
-          type="text" 
-          class="form-control" 
-          v-model="username"
-          :class="{'is-invalid': isExist === false}"
-          id="validationServer03" 
-          placeholder="Enter Username" 
+          class="font-body rounded w-full py-2 px-3 text-gray-700 mb-2"
+          :class="{'border-red-700 border-2 text-red-700': notExist}"
+          id="username" 
+          type="text"
+          v-model="username" 
+          placeholder="Enter Username"
           required
         >
-        <div class="invalid-feedback">
-          No users found!
+        <div class="flex flex-row items-center">
+          <div class="flex-1">
+            <p class="font-body text-white text-xl" v-if="notExist">Users not found!</p>
+            <div class="lds-dual-ring" v-if="loading"></div>
+          </div>
+          <button type="submit" class="bg-gray-400 hover:bg-white text-black font-bold py-2 px-8 rounded">
+            Seacrh
+          </button>
         </div>
-      </div>
-      <button type="submit" class="btn btn-primary" v-if="!loading">Search</button>
-      <div class="spinner-border text-primary" role="status" v-else>
-        <span class="sr-only">Loading...</span>
       </div>
     </form>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
+import { apiUser } from "@/config";
 
 export default {
   data() {
     return {
       username: '',
-      isExist: null,
+      notExist: false,
       loading: false
     }
   },
-  
   methods: {
     findUser() {
       this.loading = true
-      axios.get(`https://api.github.com/users/${this.username}`)
+      this.notExist = false
+      
+      axios.get(`${apiUser}/${this.username}`)
         .then(resp => {
-          this.isExist = null;
+          this.notExist = false;
           this.$store.dispatch('getRepoList', this.username);
         })
         .then(resp => {
@@ -50,7 +58,7 @@ export default {
         })
         .catch(err => {
           console.log(err)
-          this.isExist = false;
+          this.notExist = true;
           this.loading = false;
         })
     }
@@ -58,16 +66,29 @@ export default {
 };
 </script>
 
-<style scoped>
-  .s-container {
-    display: flex;
-    height: 100vh;
-    justify-content: center;
-    align-items: center;
+<style>
+.lds-dual-ring {
+  display: block;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 1px;
+  border-radius: 50%;
+  border: 0.2rem solid #fff;
+  border-color: #fff transparent #fff transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
   }
-
-  .s-form-group {
-    width: 30vw;
-    margin-bottom: 1rem
+  100% {
+    transform: rotate(360deg);
   }
+}
 </style>
