@@ -1,17 +1,17 @@
 <template>
     <div class="py-2 px-2 sm:px-0 relative">
-      <div class="flex justify-center items-center h-48" v-if="repoList.length < 1">
+      <div class="flex justify-center items-center h-48" v-if="repoData.length < 1">
         <div class="lds-facebook"><div></div><div></div><div></div></div>
       </div>
-      <s-repo-card v-for="repo in repoList" :content="repo" :key="repo.id" v-else></s-repo-card>
-      <button class="fixed right-0 bottom-0 my-6 mx-4 bg-purple-400 p-4" @click="backTop" v-show="currentScroll > 300">
+      <s-repo-card v-for="repo in repoData" :content="repo" :key="repo.id" v-else></s-repo-card>
+      <button class="fixed right-0 bottom-0 my-6 mx-4 bg-purple-400 p-4" @click="backTop" v-show="currentScroll > 0">
         <i class="fas fa-chevron-up"></i>
       </button>
     </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 import RepoCard from '../components/RepoCard'
 
 export default {
@@ -24,7 +24,7 @@ export default {
     sRepoCard: RepoCard
   },
   computed: {
-    ...mapState(['repoList'])
+    ...mapGetters({ repoData: 'repository/getRepo' })
   },
   methods: {
     backTop() {
@@ -32,9 +32,9 @@ export default {
     },
   },
   mounted() {
-    let p = this;
+    const upperThis = this;
     window.addEventListener('scroll', function() {
-      p.currentScroll = this.scrollY;
+      upperThis.currentScroll = this.scrollY;
     })
   }
 }

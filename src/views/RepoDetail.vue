@@ -9,7 +9,7 @@
         <markdown-it-vue class="md-body" html="true" :content="text" :options="options"/>
       </div>
     </div>
-    <button class="fixed right-0 bottom-0 my-6 mx-4 bg-purple-400 p-4" @click="backTop" v-show="currentScroll > 500">
+    <button class="fixed right-0 bottom-0 my-6 mx-4 bg-purple-400 p-4" @click="backTop" v-show="currentScroll > 0">
       <i class="fas fa-chevron-up"></i>
     </button>
   </div>
@@ -20,7 +20,7 @@ import axios from "axios";
 import MarkdownItVue from "markdown-it-vue"
 import "markdown-it-vue/dist/markdown-it-vue.css"
 
-import { apiDetail } from "@/config";
+import { getUserRepo } from '@/services/repo';
 
 export default {
   data() {
@@ -38,16 +38,10 @@ export default {
   components: {
     MarkdownItVue
   },
-  created() {
+  async created() {
     const { username, repository } = this.$route.params;
-    axios.get(`${apiDetail}/${username}/${repository}/master/README.md`)
-      .then(resp => {
-        this.text = resp.data;
-      })
-      .catch(err => {
-        console.log(err);
-        this.text = "<h1><center>No README.md found</center></h1>";
-      });
+    const markdown = await getUserRepo(username, repository);
+    this.text = markdown; 
   },
   methods: {
     backTop() {
@@ -55,9 +49,9 @@ export default {
     },
   },
   mounted() {
-    let p = this;
+    const upperThis = this;
     window.addEventListener("scroll", function() {
-      p.currentScroll = this.scrollY;
+      upperThis.currentScroll = this.scrollY;
     });
   }
 };

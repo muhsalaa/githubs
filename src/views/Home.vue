@@ -32,7 +32,9 @@
 
 <script>
 import axios from "axios";
+import { mapActions } from 'vuex';
 import { apiUser } from "@/config";
+import { isUserExist } from "@/services/repo";
 
 export default {
   data() {
@@ -43,24 +45,19 @@ export default {
     }
   },
   methods: {
-    findUser() {
+    ...mapActions({ getRepoList: 'repository/getRepoList' }),
+    async findUser() {
       this.loading = true
       this.notExist = false
-      
-      axios.get(`${apiUser}/${this.username}`)
-        .then(resp => {
-          this.notExist = false;
-          this.$store.dispatch('getRepoList', this.username);
-        })
-        .then(resp => {
-          this.$router.push(this.username);
-          this.username = '';
-        })
-        .catch(err => {
-          console.log(err)
-          this.notExist = true;
-          this.loading = false;
-        })
+
+      const userExist = await isUserExist(this.username);
+      if (userExist) {
+        this.getRepoList(this.username);
+        this.$router.push(this.username);
+      } else {
+        this.notExist = true;
+        this.loading = false;
+      }
     }
   }
 };

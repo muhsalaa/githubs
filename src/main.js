@@ -4,7 +4,7 @@ import App from "./App.vue";
 import "@/assets/css/tailwind.css";
 
 import { routes } from "./routes";
-import { store } from "./store";
+import store from "./store";
 
 Vue.use(VueRouter);
 Vue.config.productionTip = false;
